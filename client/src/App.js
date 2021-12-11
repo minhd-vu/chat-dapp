@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import ChatContract from "./contracts/Chat.json";
 import getWeb3 from "./getWeb3";
 import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 class App extends Component {
 	state = { messages: 0, web3: null, accounts: null, contract: null };
@@ -36,7 +38,8 @@ class App extends Component {
 	};
 
 	runExample = async () => {
-		const { contract } = this.state;
+		// eslint-disable-next-line
+		const { accounts, contract } = this.state;
 
 		// await contract.methods.send("Hello World!").send({ from: accounts[0] });
 
@@ -47,8 +50,8 @@ class App extends Component {
 
 		// Update state with the result.
 		this.setState({
-			messages: response.map(x =>
-				<li className="list-group-item">{x.message}</li>
+			messages: response.map((m, i) =>
+				<li key={i} className="list-group-item">{m.message}</li>
 			)
 		});
 	};
@@ -59,11 +62,17 @@ class App extends Component {
 		}
 		return (
 			<div className="App">
-				<h1>Chat dApp</h1>
-				<div>Account: {this.state.accounts}</div>
-				<ul className="list-group">
-					{this.state.messages}
-				</ul>
+				<h1 className="text-center">Chat dApp</h1>
+
+				<div className="chat">
+					<div className="head text-center">Account: {this.state.accounts}</div>
+					<ul className="list-group text-left">
+						{this.state.messages}
+					</ul>
+					<div className="footer">
+						<input className="form-control" type="text" placeholder="Type here..." />
+					</div>
+				</div>
 			</div>
 		);
 	}
