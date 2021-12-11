@@ -1,20 +1,8 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import ChatContract from "./contracts/Chat.json";
 import getWeb3 from "./getWeb3";
-import { Drizzle } from '@drizzle/store';
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-const options = {
-	contracts: [
-		SimpleStorageContract,
-		ChatContract
-	],
-};
-
-// eslint-disable-next-line
-const drizzle = new Drizzle(options);
 
 class App extends Component {
 	state = { messages: 0, web3: null, accounts: null, contract: null };
@@ -48,7 +36,7 @@ class App extends Component {
 	};
 
 	runExample = async () => {
-		const { accounts, contract } = this.state;
+		const { contract } = this.state;
 
 		// await contract.methods.send("Hello World!").send({ from: accounts[0] });
 
@@ -80,7 +68,5 @@ class App extends Component {
 		);
 	}
 }
-
-
 
 export default App;
