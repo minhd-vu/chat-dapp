@@ -4,6 +4,7 @@ import ChatContract from "./contracts/Chat.json";
 import getWeb3 from "./getWeb3";
 import { Drizzle } from '@drizzle/store';
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const options = {
 	contracts: [
@@ -57,7 +58,11 @@ class App extends Component {
 		console.log(response);
 
 		// Update state with the result.
-		this.setState({ messages: response });
+		this.setState({
+			messages: response.map(x =>
+				<li className="list-group-item">{x.message}</li>
+			)
+		});
 	};
 
 	render() {
@@ -66,21 +71,16 @@ class App extends Component {
 		}
 		return (
 			<div className="App">
-				<h1>Good to Go!</h1>
-				<p>Your Truffle Box is installed and ready.</p>
-				<h2>Smart Contract Example</h2>
-				<p>
-					If your contracts compiled and migrated successfully, below will show
-					a stored value of 5 (by default).
-				</p>
-				<p>
-					Try changing the value stored on <strong>line 42</strong> of App.js.
-				</p>
-				<div>The stored value is: {this.state.messages}</div>
-				<div>The account value is: {this.state.accounts}</div>
+				<h1>Chat dApp</h1>
+				<div>Account: {this.state.accounts}</div>
+				<ul className="list-group">
+					{this.state.messages}
+				</ul>
 			</div>
 		);
 	}
 }
+
+
 
 export default App;
