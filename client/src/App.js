@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ChatContract from "./contracts/Chat.json";
 import getWeb3 from "./getWeb3";
 import "./App.css";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { DataGrid } from "@mui/x-data-grid";
@@ -11,19 +11,24 @@ const columns = [
 	{
 		field: "id",
 		headerName: "Date",
+		minWidth: 200,
 	},
 	{
 		field: "author",
 		headerName: "Author",
+		minWidth: 400,
 	},
 	{
 		field: "message",
 		headerName: "Message",
+		flex: 1,
 	},
 ];
 
+const pageSize = 10;
+
 class App extends Component {
-	state = { messages: 0, web3: null, accounts: null, contract: null };
+	state = { messages: 0, web3: null, accounts: null, contract: null, page: 0 };
 
 	componentDidMount = async () => {
 		try {
@@ -64,13 +69,16 @@ class App extends Component {
 
 		console.log(response);
 
+		const messages = response.map(m => ({
+			id: new Date(m.time * 1000).toLocaleString(),
+			author: m.author,
+			message: m.message,
+		}));
+
 		// Update state with the result.
 		this.setState({
-			messages: response.map((m, i) => ({
-				id: new Date(m.time * 1000),
-				author: m.author,
-				message: m.message,
-			}))
+			messages: messages,
+			page: messages.length / pageSize,
 		});
 	};
 
@@ -79,18 +87,16 @@ class App extends Component {
 			return <div>Loading Web3, accounts, and contract...</div>;
 		}
 		return (
-			<div className="App">
+			<div className="App mx-5">
 				<h1 className="text-center">Chat dApp</h1>
-				<div style={{ width: "100%" }}>
+				<div style={{ height: 500, width: "100%" }}>
 					<DataGrid
 						rows={this.state.messages}
 						columns={columns}
-						pageSize={5}
-						autoPageSize
-						rowsPerPageOptions={[5]}
-						selectionModel={0}
-						autoHeight
-						disableColumnMenu
+						pageSize={pageSize}
+						pagination
+						onPageChange={p => this.setState({ page: p })}
+						page={this.state.page}
 					/>
 				</div>
 			</div>
