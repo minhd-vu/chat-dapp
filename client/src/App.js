@@ -3,9 +3,9 @@ import ChatContract from "./contracts/Chat.json";
 import getWeb3 from "./getWeb3";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { DataGrid } from "@mui/x-data-grid";
+import { TextField, InputAdornment, IconButton } from "@mui/material";
+import { Send } from "@mui/icons-material";
 
 const columns = [
 	{
@@ -59,10 +59,7 @@ class App extends Component {
 	};
 
 	getMessages = async () => {
-		// eslint-disable-next-line
-		const { accounts, contract } = this.state;
-
-		// await contract.methods.send("Hello World!").send({ from: accounts[0] });
+		const { contract } = this.state;
 
 		// Get the value from the contract to prove it worked.
 		const response = await contract.methods.get().call();
@@ -82,6 +79,12 @@ class App extends Component {
 		});
 	};
 
+	onSubmit = async (e) => {
+		e.preventDefault();
+		const { accounts, contract } = this.state;
+		await contract.methods.send("Hello World!").send({ from: accounts[0] });
+	}
+
 	render() {
 		if (!this.state.web3) {
 			return <div>Loading Web3, accounts, and contract...</div>;
@@ -89,6 +92,7 @@ class App extends Component {
 		return (
 			<div className="App mx-5">
 				<h1 className="text-center">Chat dApp</h1>
+				<p className="text-center">Account: {this.state.accounts[0]}</p>
 				<div style={{ height: 500, width: "100%" }}>
 					<DataGrid
 						rows={this.state.messages}
@@ -99,7 +103,26 @@ class App extends Component {
 						page={this.state.page}
 					/>
 				</div>
-			</div>
+				<form onSubmit={this.onSubmit} >
+					<TextField
+						className="my-3"
+						id="outlined-basic"
+						label="Send Message..."
+						variant="outlined"
+						fullWidth
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position="end">
+									<IconButton edge="end" color="primary" type="submit">
+										<Send />
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
+						required
+					/>
+				</form>
+			</div >
 		);
 	}
 }
