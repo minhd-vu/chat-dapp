@@ -7,6 +7,7 @@ pragma solidity ^0.8.4;
  */
 contract Chat {
     struct Message {
+        uint256 time; // timestamp of message
         address author; // author of the message
         string message; // chat message
     }
@@ -19,7 +20,7 @@ contract Chat {
     @param message The message being sent to the chat
      */
     function send(string calldata message) external {
-        messages.push(Message(msg.sender, message));
+        messages.push(Message(block.timestamp, msg.sender, message));
     }
 
     /**
