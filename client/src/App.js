@@ -28,7 +28,7 @@ const columns = [
 const pageSize = 10;
 
 class App extends Component {
-	state = { messages: 0, web3: null, accounts: null, contract: null, page: 0 };
+	state = { messages: 0, web3: null, accounts: null, contract: null, page: 0, message: "" };
 
 	componentDidMount = async () => {
 		try {
@@ -81,8 +81,9 @@ class App extends Component {
 
 	onSubmit = async (e) => {
 		e.preventDefault();
-		const { accounts, contract } = this.state;
-		await contract.methods.send("Hello World!").send({ from: accounts[0] });
+		const { accounts, contract, message } = this.state;
+		await contract.methods.send(message).send({ from: accounts[0] });
+		window.location.reload(false);
 	}
 
 	render() {
@@ -110,6 +111,7 @@ class App extends Component {
 						label="Send Message..."
 						variant="outlined"
 						fullWidth
+						required
 						InputProps={{
 							endAdornment: (
 								<InputAdornment position="end">
@@ -119,7 +121,8 @@ class App extends Component {
 								</InputAdornment>
 							),
 						}}
-						required
+						value={this.state.message}
+						onInput={e => this.setState({ message: e.target.value })}
 					/>
 				</form>
 			</div >
