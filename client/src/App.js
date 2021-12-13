@@ -5,6 +5,22 @@ import "./App.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { DataGrid } from "@mui/x-data-grid";
+
+const columns = [
+	{
+		field: "id",
+		headerName: "Date",
+	},
+	{
+		field: "author",
+		headerName: "Author",
+	},
+	{
+		field: "message",
+		headerName: "Message",
+	},
+];
 
 class App extends Component {
 	state = { messages: 0, web3: null, accounts: null, contract: null };
@@ -14,7 +30,7 @@ class App extends Component {
 			// Get network provider and web3 instance.
 			const web3 = await getWeb3();
 
-			// Use web3 to get the user's accounts.
+			// Use web3 to get the user"s accounts.
 			const accounts = await web3.eth.getAccounts();
 
 			// Get the contract instance.
@@ -26,8 +42,8 @@ class App extends Component {
 			);
 
 			// Set web3, accounts, and contract to the state, and then proceed with an
-			// example of interacting with the contract's methods.
-			this.setState({ web3, accounts, contract: instance }, this.runExample);
+			// example of interacting with the contract"s methods.
+			this.setState({ web3, accounts, contract: instance }, this.getMessages);
 		} catch (error) {
 			// Catch any errors for any of the above operations.
 			alert(
@@ -37,7 +53,7 @@ class App extends Component {
 		}
 	};
 
-	runExample = async () => {
+	getMessages = async () => {
 		// eslint-disable-next-line
 		const { accounts, contract } = this.state;
 
@@ -50,9 +66,11 @@ class App extends Component {
 
 		// Update state with the result.
 		this.setState({
-			messages: response.map((m, i) =>
-				<li key={i} className="list-group-item">{m.message}</li>
-			)
+			messages: response.map((m, i) => ({
+				id: new Date(m.time * 1000),
+				author: m.author,
+				message: m.message,
+			}))
 		});
 	};
 
@@ -63,15 +81,17 @@ class App extends Component {
 		return (
 			<div className="App">
 				<h1 className="text-center">Chat dApp</h1>
-
-				<div className="chat">
-					<div className="head text-center">Account: {this.state.accounts}</div>
-					<ul className="list-group text-left">
-						{this.state.messages}
-					</ul>
-					<div className="footer">
-						<input className="form-control" type="text" placeholder="Type here..." />
-					</div>
+				<div style={{ width: "100%" }}>
+					<DataGrid
+						rows={this.state.messages}
+						columns={columns}
+						pageSize={5}
+						autoPageSize
+						rowsPerPageOptions={[5]}
+						selectionModel={0}
+						autoHeight
+						disableColumnMenu
+					/>
 				</div>
 			</div>
 		);
