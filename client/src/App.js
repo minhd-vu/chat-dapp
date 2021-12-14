@@ -28,7 +28,14 @@ const columns = [
 const pageSize = 10;
 
 class App extends Component {
-	state = { messages: 0, web3: null, accounts: null, contract: null, page: 0, message: "" };
+	state = {
+		messages: 0,
+		web3: null,
+		accounts: null,
+		contract: null,
+		page: 0,
+		message: ""
+	};
 
 	componentDidMount = async () => {
 		try {
